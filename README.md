@@ -8,6 +8,10 @@ self-describing **recording zip**:
   requests** (with response bodies), and **storage state** (localStorage, sessionStorage,
   cookies, best-effort IndexedDB) using the Chrome DevTools Protocol. On stop it zips
   everything and downloads it.
+- **`firefox/`** — a Firefox (Manifest V3) build. Firefox can't use the DevTools Protocol,
+  so it captures with content scripts instead (wrapped `console`/`fetch`/`XHR` + storage) and
+  records video via `getDisplayMedia` from a small recorder window. **Lower fidelity** than
+  the Chrome build (app-level network only, best-effort bodies) but produces the **same zip**.
 - **`viewer/`** — a fully client-side static web app. Drag a recording zip in and it replays
   the video with console/network/storage panels synchronized to the playhead. No server,
   no upload, no auth — sharing a recording just means sending the zip.
@@ -44,6 +48,30 @@ Use it:
 
 > Capture uses `chrome.debugger`, so only one recording per tab at a time, and DevTools
 > can't be open on that tab simultaneously (Chrome allows only one debugger client).
+
+## Firefox extension
+
+```bash
+npm run build:firefox            # outputs firefox/dist
+npm run package:firefox          # build + zip for testing / AMO submission
+```
+
+Load it: `about:debugging` → **This Firefox** → **Load Temporary Add-on** → pick
+`firefox/dist/manifest.json`.
+
+Use it:
+
+1. Open the tab you want to record and click the Blackbox toolbar icon — a small **recorder
+   window** opens.
+2. Click **Start recording**; when Firefox asks what to share, pick **that tab**.
+3. Reproduce the bug (reload the tab first if you need capture from page load).
+4. Click **Stop & download** — a `recording-<timestamp>.zip` downloads and replays in the
+   same viewer.
+
+> Firefox capture is content-script based: it sees app-initiated `fetch`/`XHR` (not
+> browser-level requests like preflight or navigation), best-effort response bodies, and
+> console output from the moment recording starts. For full-fidelity capture use the
+> Chrome/Edge build.
 
 ## Viewer
 

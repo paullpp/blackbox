@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Blackbox Recorder</title>
+    <style>
+      :root { color-scheme: dark; }
+      body {
+        margin: 0;
+        padding: 18px;
+        font: 13px/1.45 -apple-system, system-ui, sans-serif;
+        background: #16181d;
+        color: #e6e8ec;
+      }
+      h1 { font-size: 15px; margin: 0 0 4px; }
+      .tab {
+        color: #9aa0aa;
+        font-size: 12px;
+        margin-bottom: 14px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .tab b { color: #e6e8ec; }
+      button {
+        width: 100%;
+        padding: 11px;
+        border: 0;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #fff;
+        cursor: pointer;
+        background: #4f8cff;
+      }
+      button.stop { background: #ff4f5e; }
+      button:disabled { opacity: 0.5; cursor: default; }
+      .stats { display: flex; gap: 14px; margin: 14px 0; color: #9aa0aa; }
+      .stats b { color: #e6e8ec; font-variant-numeric: tabular-nums; }
+      .note { color: #9aa0aa; font-size: 11.5px; margin-top: 14px; }
+      .error {
+        margin-top: 12px; padding: 8px; border-radius: 6px;
+        background: rgba(255,79,94,0.12); color: #ff9aa3; font-size: 11.5px;
+      }
+      .hidden { display: none; }
+    </style>
+  </head>
+  <body>
+    <h1>Blackbox</h1>
+    <div class="tab" id="tabLabel">Recording the active tab</div>
+
+    <div class="stats" id="stats">
+      <div>console <b id="consoleCount">0</b></div>
+      <div>network <b id="networkCount">0</b></div>
+      <div id="elapsed"></div>
+    </div>
+
+    <button id="toggle">Start recording</button>
+
+    <div class="error hidden" id="error"></div>
+    <div class="note" id="note">
+      When Firefox asks what to share, pick <b>this tab</b>. Capture begins when
+      you start; reload the tab afterward to capture from page load.
+    </div>
+
+    <script src="recorder.js"></script>
+  </body>
+</html>
