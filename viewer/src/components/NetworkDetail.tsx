@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { BodyRef, NetworkEntry, ParsedRecording } from "@shared/format";
 import { fmtBytes, fmtDuration } from "../lib/format";
 import { CloseIcon, SeekIcon } from "./icons";
+import { JsonOrText } from "./JsonTree";
 
 type Tab = "general" | "request" | "response";
 
@@ -27,17 +28,6 @@ function HeaderTable({ headers }: { headers: Record<string, string> }) {
       </tbody>
     </table>
   );
-}
-
-function maybePretty(text: string, mime: string): string {
-  if (/json/.test(mime)) {
-    try {
-      return JSON.stringify(JSON.parse(text), null, 2);
-    } catch {
-      /* fall through */
-    }
-  }
-  return text;
 }
 
 function BodyView({
@@ -80,9 +70,7 @@ function BodyView({
   if (isImage) {
     return <div className="empty small">[{body.mimeType}, {fmtBytes(body.size)}]</div>;
   }
-  return (
-    <pre className="body-pre">{text ? maybePretty(text, body.mimeType) : "—"}</pre>
-  );
+  return text ? <JsonOrText text={text} /> : <div className="empty small">—</div>;
 }
 
 export function NetworkDetail({ entry, readBody, onClose, onSeek }: Props) {

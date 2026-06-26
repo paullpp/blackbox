@@ -108,3 +108,9 @@ export const ArrowDownIcon = (p: IconProps) => (
     <path d="M6 13l6 6 6-6" />
   </Line>
 );
+
+export const ChevronIcon = (p: IconProps) => (
+  <Line {...p}>
+    <path d="M9 6l6 6-6 6" />
+  </Line>
+);

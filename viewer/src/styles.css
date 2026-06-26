@@ -335,6 +335,86 @@ button { font-family: inherit; }
   overflow: auto;
 }
 
+/* ---- JSON tree ---- */
+.json-tree {
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.55;
+}
+.j-node { }
+.j-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 0 2px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.j-line:hover { background: var(--bg-2); }
+.j-leaf { cursor: default; }
+.j-leaf:hover { background: transparent; }
+.j-chev {
+  flex: 0 0 auto;
+  margin-top: 3px;
+  color: var(--muted);
+  transition: transform 0.1s ease;
+}
+.j-chev.open { transform: rotate(90deg); }
+.j-leaf .j-chev,
+.j-leaf::before { content: ""; }
+.j-leaf { padding-left: 17px; } /* align with chevron'd lines */
+.j-key { color: var(--accent); }
+.j-summary { color: var(--muted); }
+.j-tag {
+  font-size: 9px;
+  text-transform: uppercase;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0 4px;
+  margin-right: 2px;
+}
+.j-children {
+  padding-left: 12px;
+  margin-left: 7px;
+  border-left: 1px solid var(--border);
+}
+.j-str { color: #9ece6a; }
+.j-num { color: #ff9e64; }
+.j-bool { color: #bb9af7; }
+.j-null { color: var(--muted); }
+.j-more {
+  background: none;
+  border: 0;
+  color: var(--accent);
+  cursor: pointer;
+  font: inherit;
+  padding: 0 0 0 6px;
+  text-decoration: underline;
+}
+.j-more.block { display: block; margin-top: 6px; }
+
+/* ---- Collapsible value (storage / cookies) ---- */
+.cv-inline { word-break: break-all; }
+.cv-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: 0;
+  color: var(--fg);
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+  text-align: left;
+}
+.cv-toggle:hover .cv-preview { color: var(--fg); }
+.cv-preview { color: var(--muted); }
+.cv .json-tree,
+.cv .body-pre { margin-top: 4px; }
+
 /* ---- Storage ---- */
 .store-block { margin-bottom: 18px; }
 .store-block h4 { margin: 0 0 6px; text-transform: capitalize; }
@@ -342,7 +422,8 @@ button { font-family: inherit; }
 .diff-added { background: rgba(70, 201, 139, 0.12); }
 .diff-removed { background: rgba(255, 90, 103, 0.12); }
 .diff-changed { background: rgba(255, 184, 77, 0.10); }
-.diff-old { color: var(--error); text-decoration: line-through; }
+.diff-change { display: flex; flex-direction: column; gap: 3px; }
+.diff-old { color: var(--error); }
 .diff-new { color: var(--ok); }
 
 @media (max-width: 900px) {

@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import type { CookieRecord, StorageSnapshot } from "@shared/format";
+import { CollapsibleValue, JsonTree } from "./JsonTree";
 
 type Mode = "start" | "end" | "diff";
 
@@ -64,7 +65,9 @@ function KvBlock({
               {keys.map((k) => (
                 <tr key={k}>
                   <td className="kv-key">{k}</td>
-                  <td className="kv-val break">{src[k]}</td>
+                  <td className="kv-val">
+                    <CollapsibleValue value={src[k]} />
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -85,17 +88,24 @@ function KvBlock({
             {visible.map((r) => (
               <tr key={r.key} className={`diff-${r.state}`}>
                 <td className="kv-key">{r.key}</td>
-                <td className="kv-val break">
+                <td className="kv-val">
                   {r.state === "changed" ? (
-                    <>
-                      <span className="diff-old">{r.startVal}</span>
-                      {" → "}
-                      <span className="diff-new">{r.endVal}</span>
-                    </>
+                    <div className="diff-change">
+                      <div className="diff-old">
+                        <CollapsibleValue value={r.startVal ?? ""} />
+                      </div>
+                      <div className="diff-new">
+                        <CollapsibleValue value={r.endVal ?? ""} />
+                      </div>
+                    </div>
                   ) : r.state === "removed" ? (
-                    <span className="diff-old">{r.startVal}</span>
+                    <div className="diff-old">
+                      <CollapsibleValue value={r.startVal ?? ""} />
+                    </div>
                   ) : (
-                    <span className="diff-new">{r.endVal}</span>
+                    <div className="diff-new">
+                      <CollapsibleValue value={r.endVal ?? ""} />
+                    </div>
                   )}
                 </td>
               </tr>
@@ -119,10 +129,9 @@ function CookieBlock({ cookies }: { cookies: CookieRecord[] }) {
             {cookies.map((c, i) => (
               <tr key={i}>
                 <td className="kv-key">{c.name}</td>
-                <td className="kv-val break">
-                  {c.value}
+                <td className="kv-val">
+                  <CollapsibleValue value={c.value} />
                   <span className="cookie-meta">
-                    {" "}
                     {c.domain}
                     {c.httpOnly ? " · HttpOnly" : ""}
                     {c.secure ? " · Secure" : ""}
@@ -180,9 +189,7 @@ export function StoragePanel({ start, end }: Props) {
             {snap?.indexedDBError ? (
               <div className="empty small">{snap.indexedDBError}</div>
             ) : (
-              <pre className="body-pre">
-                {JSON.stringify(snap?.indexedDB ?? {}, null, 2)}
-              </pre>
+              <JsonTree value={snap?.indexedDB ?? {}} />
             )}
           </section>
         )}
