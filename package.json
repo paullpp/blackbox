@@ -19,7 +19,8 @@
     "sample": "node scripts/make-sample.mjs",
     "icons": "node scripts/make-icons.mjs",
     "package:extension": "npm run build:extension && node scripts/package-extension.mjs",
-    "package:firefox": "npm run build:firefox && node scripts/package-firefox.mjs"
+    "package:firefox": "npm run build:firefox && node scripts/package-firefox.mjs",
+    "package:firefox-src": "git archive --format=zip -o blackbox-source.zip HEAD"
   },
   "devDependencies": {
     "sharp": "^0.35.2"
