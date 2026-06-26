@@ -8,7 +8,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "jszip": "^3.10.1"
+    "fflate": "^0.8.2"
   },
   "devDependencies": {
     "@types/firefox-webext-browser": "^120.0.4",

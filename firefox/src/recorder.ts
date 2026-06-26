@@ -1,7 +1,7 @@
 // The recorder control window. Holds the getDisplayMedia stream + MediaRecorder
 // (a persistent window so the stream survives), and on stop pulls the captured
 // payload from the background, assembles the zip, and downloads it.
-import JSZip from "jszip";
+import { zipSync, strToU8, type Zippable } from "fflate";
 import { FILES, type RecordingManifest } from "@shared/format";
 import type { AssemblePayload, StatusReply } from "./messages";
 
@@ -15,7 +15,11 @@ const errorBox = $("error");
 const consoleCount = $("consoleCount");
 const networkCount = $("networkCount");
 const elapsed = $("elapsed");
-$("tabLabel").innerHTML = `Recording: <b>${escapeHtml(tabTitle)}</b>`;
+const tabLabel = $("tabLabel");
+tabLabel.textContent = "Recording: ";
+const tabBold = document.createElement("b");
+tabBold.textContent = tabTitle;
+tabLabel.appendChild(tabBold);
 
 let stream: MediaStream | null = null;
 let recorder: MediaRecorder | null = null;
@@ -25,15 +29,16 @@ let state: "idle" | "recording" | "saving" = "idle";
 let timer: number | undefined;
 let statusPoll: number | undefined;
 
-function escapeHtml(s: string): string {
-  return s.replace(/[&<>"]/g, (c) =>
-    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c] as string,
-  );
-}
-
 function showError(msg: string): void {
   errorBox.textContent = msg;
   errorBox.classList.remove("hidden");
+}
+
+function base64ToBytes(b64: string): Uint8Array {
+  const bin = atob(b64);
+  const out = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+  return out;
 }
 
 function pickMimeType(): string {
@@ -137,20 +142,22 @@ async function assembleZip(
     videoMissing,
   };
 
-  const zip = new JSZip();
-  zip.file(FILES.manifest, JSON.stringify(manifest, null, 2));
-  if (!videoMissing) zip.file(FILES.video, video, { compression: "STORE" });
-  zip.file(FILES.console, JSON.stringify(payload.console));
-  zip.file(FILES.network, JSON.stringify(payload.network));
-  zip.file(FILES.storageStart, JSON.stringify(payload.storageStart, null, 2));
-  zip.file(FILES.storageEnd, JSON.stringify(payload.storageEnd, null, 2));
-  for (const b of payload.bodies) zip.file(b.path, b.data, { base64: b.base64 });
+  const files: Zippable = {};
+  files[FILES.manifest] = strToU8(JSON.stringify(manifest, null, 2));
+  if (!videoMissing) {
+    // Video is already compressed — store without re-deflating.
+    files[FILES.video] = [new Uint8Array(await video.arrayBuffer()), { level: 0 }];
+  }
+  files[FILES.console] = strToU8(JSON.stringify(payload.console));
+  files[FILES.network] = strToU8(JSON.stringify(payload.network));
+  files[FILES.storageStart] = strToU8(JSON.stringify(payload.storageStart, null, 2));
+  files[FILES.storageEnd] = strToU8(JSON.stringify(payload.storageEnd, null, 2));
+  for (const b of payload.bodies) {
+    files[b.path] = b.base64 ? base64ToBytes(b.data) : strToU8(b.data);
+  }
 
-  const blob = await zip.generateAsync({
-    type: "blob",
-    compression: "DEFLATE",
-    compressionOptions: { level: 6 },
-  });
+  const zipped = zipSync(files, { level: 6 });
+  const blob = new Blob([zipped], { type: "application/zip" });
   const stamp = new Date(payload.manifest.recordingStartEpochMs)
     .toISOString()
     .replace(/[:.]/g, "-")

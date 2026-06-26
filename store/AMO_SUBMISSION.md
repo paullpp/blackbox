@@ -43,7 +43,7 @@ into IIFE files. Mapping of uploaded files -> source:
   background.js   <- firefox/src/background.ts
   content.js      <- firefox/src/content.ts
   page-capture.js <- firefox/src/page-capture.ts
-  recorder.js     <- firefox/src/recorder.ts (bundles jszip, an MIT library)
+  recorder.js     <- firefox/src/recorder.ts (bundles fflate, an MIT zip library)
   recorder.html, manifest.json, icons/ are copied as-is.
 Shared zip-format types: shared/format.ts. No remote code is loaded or eval'd;
 no analytics or network calls are made by the add-on itself.
