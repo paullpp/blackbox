@@ -1,0 +1,11 @@
+{
+  "name": "@blackbox/shared",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "format.ts",
+  "types": "format.ts",
+  "exports": {
+    ".": "./format.ts"
+  }
+}

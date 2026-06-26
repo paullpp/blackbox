@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Blackbox</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #16181d;
+        --fg: #e6e8ec;
+        --muted: #9aa0aa;
+        --accent: #4f8cff;
+        --danger: #ff4f5e;
+        --border: #2a2e37;
+      }
+      * { box-sizing: border-box; }
+      body {
+        width: 280px;
+        margin: 0;
+        padding: 16px;
+        font: 13px/1.4 -apple-system, system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--fg);
+      }
+      h1 {
+        font-size: 14px;
+        margin: 0 0 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .dot {
+        width: 9px; height: 9px; border-radius: 50%;
+        background: var(--muted);
+      }
+      .dot.recording { background: var(--danger); animation: pulse 1.2s infinite; }
+      @keyframes pulse { 50% { opacity: 0.35; } }
+      button {
+        width: 100%;
+        padding: 10px;
+        border: 0;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #fff;
+        cursor: pointer;
+        background: var(--accent);
+      }
+      button.stop { background: var(--danger); }
+      button:disabled { opacity: 0.5; cursor: default; }
+      .stats {
+        display: flex;
+        gap: 12px;
+        margin: 12px 0;
+        color: var(--muted);
+      }
+      .stats b { color: var(--fg); font-variant-numeric: tabular-nums; }
+      .elapsed { font-variant-numeric: tabular-nums; }
+      .hint { color: var(--muted); margin-top: 12px; font-size: 11.5px; }
+      .error {
+        margin-top: 12px;
+        padding: 8px;
+        border-radius: 6px;
+        background: rgba(255, 79, 94, 0.12);
+        color: #ff9aa3;
+        font-size: 11.5px;
+      }
+      .hidden { display: none; }
+    </style>
+  </head>
+  <body>
+    <h1><span class="dot" id="dot"></span> Blackbox</h1>
+
+    <div class="stats" id="stats">
+      <div>console <b id="consoleCount">0</b></div>
+      <div>network <b id="networkCount">0</b></div>
+      <div class="elapsed" id="elapsed"></div>
+    </div>
+
+    <button id="toggle">Start recording</button>
+
+    <div class="error hidden" id="error"></div>
+    <div class="hint" id="hint">
+      Records the active tab. Chrome will show a debugging banner while recording.
+    </div>
+
+    <script type="module" src="/src/popup/main.ts"></script>
+  </body>
+</html>

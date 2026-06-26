@@ -1,0 +1,19 @@
+{
+  "name": "blackbox",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Blackbox — browser session recorder (Chrome/Edge extension) + client-side replay viewer.",
+  "workspaces": [
+    "shared",
+    "extension",
+    "viewer"
+  ],
+  "scripts": {
+    "build:extension": "npm run build --workspace extension",
+    "build:viewer": "npm run build --workspace viewer",
+    "build": "npm run build:extension && npm run build:viewer",
+    "dev:viewer": "npm run dev --workspace viewer",
+    "dev:extension": "npm run dev --workspace extension",
+    "sample": "node scripts/make-sample.mjs"
+  }
+}
