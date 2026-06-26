@@ -67,6 +67,18 @@ npm run sample        # writes ./sample-recording.zip
 npm run dev:viewer    # then drag sample-recording.zip in
 ```
 
+## Sharing & publishing the extension
+
+```bash
+npm run icons              # regenerate icon PNGs from extension/icons/icon.svg
+npm run package:extension  # build + zip -> blackbox-extension-v<version>.zip
+```
+
+The resulting zip works both for **Load unpacked** sharing and for a **Chrome Web Store**
+upload. Full submission walkthrough (listing copy, permission justifications, data
+disclosures) is in [`store/SUBMISSION.md`](store/SUBMISSION.md); the privacy policy to link
+in the dashboard is [`PRIVACY.md`](PRIVACY.md).
+
 ## The recording format
 
 See `shared/format.ts`. Every event is timestamped as `offsetMs` relative to a single

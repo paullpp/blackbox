@@ -14,6 +14,11 @@
     "build": "npm run build:extension && npm run build:viewer",
     "dev:viewer": "npm run dev --workspace viewer",
     "dev:extension": "npm run dev --workspace extension",
-    "sample": "node scripts/make-sample.mjs"
+    "sample": "node scripts/make-sample.mjs",
+    "icons": "node scripts/make-icons.mjs",
+    "package:extension": "npm run build:extension && node scripts/package-extension.mjs"
+  },
+  "devDependencies": {
+    "sharp": "^0.35.2"
   }
 }

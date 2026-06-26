@@ -5,10 +5,23 @@ export default defineManifest({
   name: "Blackbox",
   version: "0.1.0",
   description:
-    "Records the active tab (video) plus console logs, network requests, and storage state, and downloads it as a replayable zip.",
+    "Record a browser tab with synced console logs, network requests, and storage state, then replay it to reproduce bugs.",
+  minimum_chrome_version: "116",
+  icons: {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png",
+  },
   action: {
     default_popup: "popup.html",
     default_title: "Blackbox",
+    default_icon: {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png",
+    },
   },
   background: {
     service_worker: "src/background/index.ts",
@@ -21,7 +34,6 @@ export default defineManifest({
     "tabCapture",
     "downloads",
     "scripting",
-    "storage",
     "offscreen",
     "activeTab",
   ],
